@@ -2,16 +2,26 @@ structure Tests =
 struct
   open Tween
 
+  (* Forced-decimal formatter: deterministic across MLton and Poly/ML
+     (always a decimal point, leading "-" not "~", fixed 6 dp). *)
+  fun fmtReal r =
+    let val s = if Real.signBit r then "-" else ""
+        val a = Real.abs r
+        val scaled = Real.realRound (a * 1000000.0)
+        val whole = Real.floor (scaled / 1000000.0)
+        val frac  = Real.floor scaled - whole * 1000000
+    in s ^ Int.toString whole ^ "." ^ StringCvt.padLeft #"0" 6 (Int.toString frac) end
+
   (* Harness lacks real checks; epsilon comparison helper. *)
   fun checkReal name (expected, actual) =
     if Real.abs (expected - actual) < 1E~6
     then Harness.check name true
-    else Harness.check (name ^ " (" ^ Real.toString expected ^ " <> " ^ Real.toString actual ^ ")") false
+    else Harness.check (name ^ " (" ^ fmtReal expected ^ " <> " ^ fmtReal actual ^ ")") false
 
   fun checkRealEps eps name (expected, actual) =
     if Real.abs (expected - actual) < eps
     then Harness.check name true
-    else Harness.check (name ^ " (" ^ Real.toString expected ^ " <> " ^ Real.toString actual ^ ")") false
+    else Harness.check (name ^ " (" ^ fmtReal expected ^ " <> " ^ fmtReal actual ^ ")") false
 
   val allEasings =
     [ ("Linear", Linear)
