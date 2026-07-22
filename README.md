@@ -1,5 +1,7 @@
 # sml-tween
 
+[![CI](https://github.com/sjqtentacles/sml-tween/actions/workflows/ci.yml/badge.svg)](https://github.com/sjqtentacles/sml-tween/actions/workflows/ci.yml)
+
 30 easing functions and keyframe timeline tweening in pure Standard ML
 
 ![sml-tween easing curves](assets/easings.png)
